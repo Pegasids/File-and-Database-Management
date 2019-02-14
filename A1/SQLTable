@@ -1,0 +1,103 @@
+CREATE TABLE Person(
+	SIN 	INTEGER,
+	Name 	CHAR(20),
+	Address CHAR(50),
+	Weight 	INTEGER,
+	Hair 	CHAR(10),
+	EyeColor CHAR(10), 
+	Height	INTEGER,	
+	Gender	CHAR(10),
+	PRIMARY KEY(SIN)
+	)
+
+CREATE TABLE DriverLicence(
+	SIN	 	INTEGER,
+	LicenceNumber 	INTEGER,
+	Class 		CHAR(10),
+	IssuingDate	CHAR(20),
+	ExpiringDate	CHAR(20),
+	Photo		BLOB,
+	PRIMARY KEY (LicenceNumeber),
+	FOREIGN KEY (SIN) REFERENCES Person(SIN)
+	)
+
+CREATE TABLE DrivingCondition(
+	LicenceNumber	INTEGER,
+	ConditionType	CHAR(20),
+	FOREIGN KEY (LicenceNumber) REFERENCES DriverLicence(LicenceNumber)
+	)
+
+CREATE TABLE PolicyOfficer(
+	SIN 		INTEGER,	
+	PolicyOfficerID	INTEGER,
+	PRIMARY KEY (PolicyOfficerID),
+	FOREIGN KEY (SIN) REFERENCES Person(SIN)
+	)
+
+CREATE TABLE RegisterOfficer(
+	SIN 		INTEGER,
+	RegisterOfficerID INTEGER,
+	PRIMARY KEY (RegisterOfficerID),
+	FOREIGN KEY (SIN) REFERENCES Person(SIN)
+	)
+
+
+CREATE TABLE Transaction(
+	TransactionID INTEGER,
+	Date	     CHAR(20),
+	Price	     INTEGER,
+	PRIMARY KEY (TransactionID)
+	)
+
+CREATE TABLE Vehicle(
+	Serial	INTEGER,
+	Make	CHAR(20),
+	Model	CHAR(20),
+	Year	INTEGER,
+	BodyColor  CHAR(10),
+	VehicleType  CHAR(10),
+	PRIMARY KEY (Serial)
+	)
+
+CREATE TABLE Drive(
+	SIN		INTEGER,
+	VSerial		INTEGER,
+	FOREIGN KEY (SIN) REFERENES Person(SIN),
+	FOREIGN KEY (VSerial) REFERENCES Vehicle(Serial)
+	)
+
+CREATE TABLE AutoSale(
+	BuyerSIN	INTEGER,
+	SellerSIN	INTEGER,
+	ROID		INTEGER,
+	TransactionID	INTEGER,
+	VSerial		INTEGER,
+	FOREIGN KEY (BuyerSIN) REFERENCES Person(SIN),
+	FOREIGN KEY (SellerSIN) REFERENCES Person(SIN),
+	FOREIGN KEY (ROID) REFERENCES RegisterOfficer(RegisterOfficerID),
+	FOREIGN KEY (TransactionID) REFERENCES Transaction(TransactionID),
+	FOREIGN KEY (VSerial) REFERENCES Vehicle(Serial)
+	)
+
+CREATE TABLE ViolationType(
+	TypeName	CHAR(20),
+	Fine		INTEGER,
+	PRIMARY KEY (TypeName)
+	)
+
+CREATE TABLE Violation(
+	TicketNumber	INTEGER,
+	VioSIN		INTEGER,
+	VioName		CHAR(20),
+	VSerial		INTEGER,
+	POID		INTEGER,
+	Date		CHAR(20),
+	Place		CHAR(50),
+	Comments	CHAR(200),
+	PRIMARY KEY (TicketNumber),
+	FOREIGN KEY (VioSIN) REFERENCES Person(SIN),
+	FOREIGN KEY (VioName) REFERENCES ViolationType(TypeName),
+	FOREIGN KEY (VSerial) REFERENCES Vehicle(Serial),
+	FOREIGN KEY (POID) REFERENCES PolicyOfficer(PolicyOfficerID)
+	)
+	
